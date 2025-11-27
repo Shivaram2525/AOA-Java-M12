@@ -1,17 +1,24 @@
-# EX 2E Pattern Matching using KMP Algorithm.
+# EX 2D Pattern Matching using Naive Approach.
 ## DATE: 20/11/2025
 ## AIM:
-To write a Java program for the following constraints.  
-Longest Palindromic Substring  
-Given a string **s**, return the longest palindromic substring in **s**,  
-using **Manacher's Algorithm**.
+To write a Java program to for given constraints.  
+Given text string with length n and a pattern with length m, the task is to print all occurrences of the pattern in the text.  
+Note: You may assume that n > m.
+
+Examples:
+
+Input: text = "THIS IS A TEST TEXT", pattern = "TEST"  
+Output: Pattern found at index 10  
+
+Input: text = "AABAACAADAABAABA", pattern = "AABA"  
+Output: Pattern found at index 0, Pattern found at index 9, Pattern found at index 12  
 
 ## Algorithm
-1. Insert separators between characters to transform the string for uniform palindrome expansion.  
-2. Maintain arrays and pointers (P-array, center, right boundary) to track palindrome radii.  
-3. For each position, mirror the palindrome length from the opposite side when possible for optimization.  
-4. Expand around each center to find the maximum palindrome radius.  
-5. Convert the transformed indices back to the original string and return the longest palindromic substring.
+1. Read the input text and pattern strings.
+2. Iterate through the text from index 0 to n–m.
+3. For each index, compare the pattern with the substring of the text character by character.
+4. If all characters match, record the starting index as a pattern match.
+5. Continue until the entire text is checked and print all matched positions.
 
 ### Developed by: Shivaram M.
 ### Register Number: 212223040195
@@ -20,58 +27,34 @@ using **Manacher's Algorithm**.
 ```java
 import java.util.Scanner;
 
-public class Solution {
-    public String longestPalindrome(String s) {
+public class NaivePatternSearch {
+    static void search(String text, String pattern) {
+        int n = text.length();
+        int m = pattern.length();
 
-        if (s == null || s.length() == 0) return "";
+        for (int i = 0; i <= n - m; i++) {
+            int j;
 
-        StringBuilder t = new StringBuilder();
-
-        t.append('^');
-        for (char c : s.toCharArray()) {
-            t.append('#');
-            t.append(c);
-        }
-        t.append("#$");
-        char[] str = t.toString().toCharArray();
-
-        int n = str.length;
-        int[] P = new int[n];
-        int C = 0, R = 0;
-        int maxLen = 0, centerIndex = 0;
-
-        for (int i = 1; i < n - 1; i++) {
-            int mirror = 2 * C - i;
-
-            if (i < R)
-                P[i] = Math.min(R - i, P[mirror]);
-
-            while (str[i + P[i] + 1] == str[i - P[i] - 1])
-                P[i]++;
-
-            if (i + P[i] > R) {
-                C = i;
-                R = i + P[i];
+            // Check for pattern match character by character
+            for (j = 0; j < m; j++) {
+                if (text.charAt(i + j) != pattern.charAt(j))
+                    break;
             }
 
-            if (P[i] > maxLen) {
-                maxLen = P[i];
-                centerIndex = i;
-            }
+            // If pattern found
+            if (j == m)
+                System.out.println("Pattern found at index " + i);
         }
-
-        int start = (centerIndex - maxLen) / 2;
-        return s.substring(start, start + maxLen);
     }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
 
-        Solution sol = new Solution();
-        String result = sol.longestPalindrome(input);
+        String text = scanner.nextLine();
+        String pattern = scanner.nextLine();
 
-        System.out.println("Longest Palindromic Substring: " + result);
+        search(text, pattern);
+
         scanner.close();
     }
 }
@@ -79,7 +62,8 @@ public class Solution {
 
 ## Output:
 
-<img width="831" height="209" alt="image" src="https://github.com/user-attachments/assets/e73b7be2-93db-48c8-9125-49e8b298c3d3" />
+<img width="764" height="275" alt="image" src="https://github.com/user-attachments/assets/07dfda06-9799-4673-b8dd-601493a954bb" />
+
 
 ## Result:
 The program successfully implemented and the expected output is verified.
